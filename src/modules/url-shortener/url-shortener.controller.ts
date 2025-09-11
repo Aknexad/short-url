@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
 import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
 
-@Controller('url-shortener')
+@Controller('')
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) {}
 
@@ -23,7 +31,10 @@ export class UrlShortenerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUrlShortenerDto: UpdateUrlShortenerDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
+  ) {
     return this.urlShortenerService.update(+id, updateUrlShortenerDto);
   }
 

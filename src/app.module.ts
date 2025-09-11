@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UrlShortenerModule } from './modules/url-shortener/url-shortener.module';
+import { UrlPath } from './modules/url-path/url-path';
 
 @Module({
   imports: [UrlShortenerModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [UrlPath],
 })
 export class AppModule {}
