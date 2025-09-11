@@ -6,40 +6,36 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
 import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
+import type { Request, Response } from 'express';
 
-@Controller('')
+@Controller()
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) {}
 
   @Post()
-  create(@Body() createUrlShortenerDto: CreateUrlShortenerDto) {
-    return this.urlShortenerService.create(createUrlShortenerDto);
+  async CreateNewShotURL(@Body(ValidationPipe) data: CreateUrlShortenerDto) {
+    return await this.urlShortenerService.CreateShortURL(data.url);
   }
 
-  @Get()
-  findAll() {
-    return this.urlShortenerService.findAll();
-  }
+  // @Get('/list')
+  // async GetListOfUrls() {
+  //   return await this.urlService.GetListOfURLs();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.urlShortenerService.findOne(+id);
-  }
+  @Get('/*')
+  async RedirectsURL(@Req() req: Request, @Res() res: Response) {
+    const urlPath = req.path;
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateUrlShortenerDto: UpdateUrlShortenerDto,
-  ) {
-    return this.urlShortenerService.update(+id, updateUrlShortenerDto);
-  }
+    const redirectURl =
+      await this.urlShortenerService.CheckAndRedirectsUrl(urlPath);
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.urlShortenerService.remove(+id);
+    return res.redirect(redirectURl);
   }
 }

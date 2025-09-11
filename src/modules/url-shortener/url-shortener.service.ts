@@ -5,10 +5,10 @@ import { GeneratingUrlShortPath } from '../url-path/url-path';
 
 @Injectable()
 export class UrlShortenerService {
-  // constructor(
-  //   private readonly repository: Repository,
-  private readonly generatingId: GeneratingUrlShortPath;
-  // ) {}
+  constructor(
+    //   private readonly repository: Repository,
+    private readonly generatingUrlShortPath: GeneratingUrlShortPath,
+  ) {}
 
   async GetListOfURLs() {
     // const data = await this.repository.FindAllUrls();
@@ -19,15 +19,14 @@ export class UrlShortenerService {
   async CreateShortURL(originalUrl: string) {
     // const lastSequence = await this.repository.FindLastSequence();
 
-    const lastSequence = { sequence: 0 };
-
     let lastRowAdded = 0;
-    if (lastSequence) {
-      lastRowAdded = Number(lastSequence.sequence);
-    }
+    // if (lastSequence) {
+    //   lastRowAdded = Number(lastSequence.sequence);
+    // }
 
     const sequence = lastRowAdded + 1;
-    const id = this.generatingId.GeneratePath(sequence);
+
+    const id = this.generatingUrlShortPath.GeneratePath(sequence);
 
     // await this.repository.CreateShotUrl({
     //   id,
