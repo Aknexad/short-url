@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Url {
+  id             String           @id
+  originalUrl    String           @db.VarChar()
+  sequence       BigInt           @unique
+  createAt       DateTime?        @default(now())
+  AccessAnalysis AccessAnalysis[]
+
+  @@index([sequence])
+}
+
+// Access analysis
+model AccessAnalysis {
+  id         Int       @id @default(autoincrement())
+  accessedAt DateTime? @default(now())
+  ipAddress  String    @db.VarChar(60)
+  userAgent  String    @db.VarChar(100)
+  url        Url?      @relation(fields: [urlId], references: [id])
+  urlId      String?
+}
