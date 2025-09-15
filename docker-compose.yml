@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shot_url
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  app:
+    build: .
+    container_name: nest-prisma-app
+    depends_on:
+      - db
+    environment:
+      # Example DATABASE_URL for Prisma
+      DATABASE_URL: postgres://postgres:postgres@db:5432/shot_url?schema=shortUrl
+      SERVICE_BASE_URL: http://localhost:8080
+      NODE_ENV: production
+    ports:
+      - '8080:8080'
+    # Optional: wait-for script if you need to wait for DB
+    command: >
+      sh -c "npx prisma migrate deploy &&
+             node dist/main.js"
+
+volumes:
+  pgdata:
